@@ -20,6 +20,11 @@ module Fastlane
         UI.message("Current edit not found, creating a new edit")
         Helper::AmazonAppSubmissionHelper.create_new_edit(token, params[:app_id])
         current_edit_id, edit_eTag = Helper::AmazonAppSubmissionHelper.open_edit(token, params[:app_id])
+        end  
+
+        if current_edit_id.nil?
+        UI.error("Creating new edit failed!")
+        return
         end
 
         if params[:upload_apk]
@@ -29,7 +34,7 @@ module Fastlane
           UI.message("Get current apk ETag")
           current_apk_eTag = Helper::AmazonAppSubmissionHelper.get_current_apk_etag(token, params[:app_id], current_edit_id, current_apk_id)
 
-          UI.message("Replacing the apk with ETag #{current_apk_eTag}")
+          UI.message("Replacing the apk with apk from #{params[:apk_path]}")
           replace_apk_response_code, replace_apk_response =  Helper::AmazonAppSubmissionHelper.replaceExistingApk(token, params[:app_id], current_edit_id, current_apk_id, current_apk_eTag, params[:apk_path])
         end
 

@@ -47,7 +47,7 @@ module Fastlane
 
         res = http.request(req)
         current_edit = JSON.parse(res.body)
-
+        
         return current_edit['id']
       end
 
